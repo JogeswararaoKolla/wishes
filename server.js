@@ -18,14 +18,21 @@ app.use(express.json());
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
+let connection;
 
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  port: 3306,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: "wishes_db"
-});
+if (process.env.JAWSDB_URL) {
+  //Heroku
+  connection = mysql.createConnection(process.env.JAWSDB_URL);
+} else {
+  //Localhost
+  connection = mysql.createConnection({
+      host: process.env.DB_HOST,
+      port: 3306,
+      database: "wishes_db",
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+  });
+}
 
 connection.connect(function(err) {
   if (err) {
